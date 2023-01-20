@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "200269931567",
+    "project_id": "fenix-313f9",
+    "storage_bucket": "fenix-313f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200269931567:android:4cbdb7599efcee251f52da",
+        "android_client_info": {
+          "package_name": "com.example.fenix_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200269931567-5uq1591rar1fq45c1efa0p52n2qjan9a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt_L0vzOZz0eSYoyb2ypHVIqgTy0UQmgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "200269931567-5uq1591rar1fq45c1efa0p52n2qjan9a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "200269931567-0ss4f9cjpog87guhsd6t7bgbh88vkdq6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fenixFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
