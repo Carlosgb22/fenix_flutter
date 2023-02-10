@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widget.dart';
+import 'widget.dart';
 
 ///Widget Login que contiene otros widgets
 class Login extends StatefulWidget {
@@ -30,13 +30,13 @@ class _LoginState extends State<Login> {
             children: const [
               SizedBox(
                 width: 300,
-                child: CampoEmail(),
+                child: FieldEmail(),
               ),
               SizedBox(
                 width: 300,
-                child: CampoContrasenia(),
+                child: FieldPassword(),
               ),
-              Padding(padding: EdgeInsets.all(10), child: BotonLogin())
+              Padding(padding: EdgeInsets.all(10), child: ButtonLogin())
             ],
           ),
         ),

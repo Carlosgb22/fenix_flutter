@@ -1,20 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../view/lista_dispositivos.dart';
-
 login(TextEditingController controllerEmail,
-    TextEditingController controllerContrasenia, BuildContext context) {
+    TextEditingController controllerPassword, BuildContext context) {
   //Crea una instancia de FirebaseAuth
   FirebaseAuth.instance
       //Se llama a este metodo al cual se le pasa como parametros el correo
       //y contraseña introducidos en en los Widget CampoEmail y CampoContrasenia
       .signInWithEmailAndPassword(
-          email: controllerEmail.text, password: controllerContrasenia.text)
-      .then((user) => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ListaDispositivos()),
-          ))
+          email: controllerEmail.text, password: controllerPassword.text)
+      .then((user) => Navigator.pushNamed(context, "/devices"))
       //En caso de dar fallo se obtiene el error y mediante
       //su codigo de error se obtiene el mensaje de error
       .catchError((e) {
@@ -24,7 +19,7 @@ login(TextEditingController controllerEmail,
         errorMessage = "La direccion de email esta malformada.";
         break;
       case "wrong-password":
-        errorMessage = "La countraseña es incorrecta.";
+        errorMessage = "La contraseña es incorrecta.";
         break;
       case "user-not-found":
         errorMessage = "No existe nigun usuario con este email.";
@@ -38,7 +33,7 @@ login(TextEditingController controllerEmail,
       default:
         errorMessage = "Un error ha ocurrido.";
     }
-    //Se muestra en un AlertDialog el mensaje de Error obtenido anteriormente
+    //Se muestra en un AlertDialog el mensaje de ErFenix()ror obtenido anteriormente
     showDialog(
         context: context,
         builder: (context) {
