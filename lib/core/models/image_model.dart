@@ -3,9 +3,11 @@ import 'dart:typed_data';
 
 class Image {
   final Uint8List? img;
+  final Map<String, String> imgJson;
 
   Image({
     this.img,
+    this.imgJson = const {},
   });
 
   factory Image.toUint8List(Map<String, dynamic> data) {
@@ -13,24 +15,14 @@ class Image {
     imgJ = imgJ.substring(1, imgJ.length - 1);
     List<String> imgList = imgJ.split(',');
     return Image(
-        img: Uint8List.fromList(
-            imgList.map((numb) => int.parse(numb)).toList()));
-  }
-
-  Map<String, dynamic> fromUint8List() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (img != null) {
-      data['type'] = 'Buffer';
-      data['imgcon'] = base64Encode(img!);
-    }
-    return data;
-  }
-}
-/*
-factory Image.fromJson(Map<String, dynamic> data) {
-    final imgJ = jsonDecode(data['data']);
-    return Image(
-      img: imgJ['data'] != null ? base64Decode(imgJ['data']) : null,
+      img: Uint8List.fromList(imgList.map((numb) => int.parse(numb)).toList()),
     );
   }
-*/
+
+  static Image fromUint8List(Uint8List img) {
+    return Image(
+      img: img,
+      imgJson: {'type': 'Buffer', 'data': base64Encode(img)},
+    );
+  }
+}

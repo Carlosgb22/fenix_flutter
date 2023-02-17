@@ -1,4 +1,5 @@
 /// Clase lanzadora del programa
+import 'package:fenix_flutter/ui/view/add_device.dart';
 import 'package:fenix_flutter/ui/view/devices.dart';
 import 'package:fenix_flutter/ui/view/login.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ void main() async {
     routes: {
       "/login": (context) => const Start(),
       "/devices": (context) => const Devices(),
+      "/devices/add": (context) => const AddDevice(),
     },
   ));
 }

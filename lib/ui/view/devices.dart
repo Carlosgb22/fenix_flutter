@@ -56,6 +56,13 @@ class _DevicesState extends State<Devices> {
                   child: CircularProgressIndicator(),
                 );
               }
-            }));
+            }),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/devices/add");
+          },
+          backgroundColor: Colors.blue,
+          child: const Icon(Icons.add_to_queue),
+        ));
   }
 }

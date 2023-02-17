@@ -24,3 +24,10 @@ Future<Device> getDeviceByIdHttp(id) async {
     throw Exception('Error al obtener el JSON');
   }
 }
+
+addDeviceHttp(json) async {
+  var response =
+      await http.post(Uri.parse("http://192.168.0.9:8080/devices"), body: json);
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}');
+}

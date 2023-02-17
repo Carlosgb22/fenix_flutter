@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:fenix_flutter/core/models/image_model.dart';
@@ -42,13 +41,13 @@ class Device {
     data['name'] = name;
     data['userUid'] = userUid;
     if (imgcon != null) {
-      data['imgcon'] = base64Encode(imgcon!);
+      data['imgcon'] = Image.fromUint8List(imgcon!).imgJson;
     }
     if (imgdiscon != null) {
-      data['imgdiscon'] = base64Encode(imgdiscon!);
+      data['imgdiscon'] = Image.fromUint8List(imgdiscon!).imgJson;
     }
     if (imgwait != null) {
-      data['imgwait'] = base64Encode(imgwait!);
+      data['imgwait'] = Image.fromUint8List(imgwait!).imgJson;
     }
     return data;
   }

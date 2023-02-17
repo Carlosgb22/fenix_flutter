@@ -1,3 +1,5 @@
+// ignore_for_file: body_might_complete_normally_catch_error
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,8 +18,7 @@ login(TextEditingController controllerEmail,
     String errorMessage;
     switch (e.code) {
       case "invalid-email":
-        errorMessage = "La direccion de email esta malformada.";
-        break;
+        return errorMessage = "La direccion de email esta malformada.";
       case "wrong-password":
         errorMessage = "La contraseña es incorrecta.";
         break;
