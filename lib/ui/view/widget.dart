@@ -1,8 +1,8 @@
 ///Clase que contiene todos los widgets creados por mi (Actividad 10 Desarrollo de Interfaces RA3)
 import 'package:fenix_flutter/core/models/device_model.dart';
 import 'package:fenix_flutter/core/providers/login_provider.dart';
+import 'package:fenix_flutter/ui/view/device_detail.dart';
 import 'package:flutter/material.dart';
-import '../../core/providers/device_details_provider.dart';
 
 ///TextEditingController para el TextField del email y el TextField  de la contraseña
 final controllerEmail = TextEditingController();
@@ -109,28 +109,31 @@ class DeviceButton extends StatelessWidget {
     return TextButton(
       style: TextButton.styleFrom(
           side: const BorderSide(width: 3.0),
-          textStyle: const TextStyle(fontSize: 20)),
+          textStyle: const TextStyle(fontSize: 15)),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
           const Icon(
             Icons.devices_other,
             color: Colors.blue,
-            size: 80,
+            size: 60,
           ),
           Padding(
             padding:
-                EdgeInsets.only(left: MediaQuery.of(context).size.width / 3),
+                EdgeInsets.only(left: MediaQuery.of(context).size.width / 7),
             child: Text("Id: ${device.id}"),
           ),
           Padding(
             padding:
-                EdgeInsets.only(left: MediaQuery.of(context).size.width / 3),
+                EdgeInsets.only(left: MediaQuery.of(context).size.width / 7),
             child: Text("Nombre: ${device.name}"),
           ),
         ],
       ),
-      onPressed: () => getDeviceById(device.id),
+      onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DeviceDetails(id: device.id))),
     );
   }
 }

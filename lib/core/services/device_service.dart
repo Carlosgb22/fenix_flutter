@@ -13,12 +13,13 @@ Future<List<Device>> getDevicesHttp() async {
   }
 }
 
-Future<Device> getDeviceByIdHttp() async {
-  var response = await http.get(Uri.parse("http://192.168.0.9:8080/devices"));
+Future<Device> getDeviceByIdHttp(id) async {
+  var response =
+      await http.get(Uri.parse("http://192.168.0.9:8080/devices/$id"));
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
-    final device = Device.fromJson(data);
-    return device;
+    var deviceData = data[0];
+    return Device.fromJson(deviceData);
   } else {
     throw Exception('Error al obtener el JSON');
   }
