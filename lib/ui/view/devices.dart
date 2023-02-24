@@ -33,7 +33,12 @@ class _DevicesState extends State<Devices> {
                 List<Device> list = <Device>[];
                 for (var data in snapshot.data!) {
                   list.add(Device(
-                      id: data.id, name: data.name, userUid: data.userUid));
+                      id: data.id,
+                      name: data.name,
+                      userUid: data.userUid,
+                      imgcon: data.imgcon,
+                      imgdiscon: data.imgdiscon,
+                      imgwait: data.imgwait));
                 }
                 return ListView.builder(
                   // Deja que ListView sepa cuántos elementos necesita para construir

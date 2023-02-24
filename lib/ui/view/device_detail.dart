@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:fenix_flutter/core/providers/device_details_provider.dart';
+import 'package:fenix_flutter/ui/view/update_device.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/models/device_model.dart';
@@ -76,10 +79,10 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                                       style: TextStyle(fontSize: 28),
                                       textAlign: TextAlign.center),
                                   Image.memory(
-                                    dev.imgcon!,
+                                    Uint8List.fromList(dev.imgcon),
                                     height:
                                         MediaQuery.of(context).size.height / 2,
-                                    fit: BoxFit.contain,
+                                    fit: BoxFit.cover,
                                   ),
                                 ],
                               ),
@@ -99,10 +102,10 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                                       style: TextStyle(fontSize: 28),
                                       textAlign: TextAlign.center),
                                   Image.memory(
-                                    dev.imgdiscon!,
+                                    Uint8List.fromList(dev.imgdiscon),
                                     height:
                                         MediaQuery.of(context).size.height / 2,
-                                    fit: BoxFit.contain,
+                                    fit: BoxFit.cover,
                                   ),
                                 ],
                               ),
@@ -122,10 +125,10 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                                       style: TextStyle(fontSize: 28),
                                       textAlign: TextAlign.center),
                                   Image.memory(
-                                    dev.imgwait!,
+                                    Uint8List.fromList(dev.imgwait),
                                     height:
                                         MediaQuery.of(context).size.height / 2,
-                                    fit: BoxFit.contain,
+                                    fit: BoxFit.cover,
                                   ),
                                 ],
                               ),
@@ -138,8 +141,17 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                             backgroundColor: Colors.blue.shade300,
                             padding: const EdgeInsets.symmetric(vertical: 30),
                           ),
-                          onPressed: actualizar(dev),
-                          child: const Text("Actualizar dispositivo"))
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        UpdateDevice(id: dev.id)));
+                          },
+                          child: const Text(
+                            "Actualizar dispositivo",
+                            style: TextStyle(color: Colors.white),
+                          ))
                     ],
                   ),
                 );

@@ -1,13 +1,11 @@
 import 'package:fenix_flutter/core/models/device_model.dart';
 import 'package:fenix_flutter/core/providers/add_device_provider.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 
 class AddDevice extends StatefulWidget {
-  const AddDevice({super.key});
+  const AddDevice({Key? key}) : super(key: key);
 
   @override
   State<AddDevice> createState() => _AddDeviceState();
@@ -25,45 +23,23 @@ class _AddDeviceState extends State<AddDevice> {
   late Uint8List imgWaitBytes;
 
   Future<void> selectImage(String fieldName) async {
-    if (defaultTargetPlatform != TargetPlatform.android &&
-        defaultTargetPlatform != TargetPlatform.iOS) {
-      // se ejecuta en Web
-      Uint8List? bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
-      if (bytesFromPicker != null) {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      // asegurarse de que la ruta de la imagen seleccionada sea válida
+      Uint8List? bytes = result.files.single.bytes;
+      if (bytes != null) {
         setState(() {
           if (fieldName == "imageCon") {
-            imgConBytes = bytesFromPicker;
-            imageCon = Image.memory(bytesFromPicker);
+            imageCon = Image.memory(bytes);
+            imgConBytes = bytes;
           } else if (fieldName == "imageDiscon") {
-            imgDisconBytes = bytesFromPicker;
-            imageDiscon = Image.memory(bytesFromPicker);
+            imageDiscon = Image.memory(bytes);
+            imgDisconBytes = bytes;
           } else if (fieldName == "imageWait") {
-            imgWaitBytes = bytesFromPicker;
-            imageWait = Image.memory(bytesFromPicker);
+            imageWait = Image.memory(bytes);
+            imgWaitBytes = bytes;
           }
         });
-      }
-    } else {
-      // se ejecuta en android o ios
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
-      if (result != null) {
-        // asegurarse de que la ruta de la imagen seleccionada sea válida
-        String? filePath = result.files.single.path;
-        if (filePath != null && filePath.startsWith('assets/')) {
-          ByteData bytes = await rootBundle.load(filePath);
-          setState(() {
-            if (fieldName == "imageCon") {
-              imageCon = Image.asset(filePath);
-              imgConBytes = bytes.buffer.asUint8List();
-            } else if (fieldName == "imageDiscon") {
-              imageDiscon = Image.asset(filePath);
-              imgDisconBytes = bytes.buffer.asUint8List();
-            } else if (fieldName == "imageWait") {
-              imageWait = Image.asset(filePath);
-              imgWaitBytes = bytes.buffer.asUint8List();
-            }
-          });
-        }
       }
     }
   }
@@ -130,14 +106,15 @@ class _AddDeviceState extends State<AddDevice> {
                   ),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Column(
                       children: [
                         const Text(
-                          "Imagen conexion:",
-                          style: TextStyle(fontSize: 20),
+                          "Imagen\nconexion:",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15),
                         ),
                         SizedBox(
                           width: (MediaQuery.of(context).size.width / 6),
@@ -148,15 +125,19 @@ class _AddDeviceState extends State<AddDevice> {
                           onPressed: () {
                             selectImage("imageCon");
                           },
-                          child: const Text("Seleccionar Imagen"),
+                          child: const Text(
+                            "Seleccionar\nImagen",
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
                     Column(
                       children: [
                         const Text(
-                          "Imagen desconexión:",
-                          style: TextStyle(fontSize: 20),
+                          "Imagen\ndesconexión:",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15),
                         ),
                         SizedBox(
                           width: (MediaQuery.of(context).size.width / 6),
@@ -167,15 +148,19 @@ class _AddDeviceState extends State<AddDevice> {
                           onPressed: () {
                             selectImage("imageDiscon");
                           },
-                          child: const Text("Seleccionar Imagen"),
+                          child: const Text(
+                            "Seleccionar\nImagen",
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
                     Column(
                       children: [
                         const Text(
-                          "Imagen espera:",
-                          style: TextStyle(fontSize: 20),
+                          "Imagen\nespera:",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15),
                         ),
                         SizedBox(
                           width: (MediaQuery.of(context).size.width / 6),
@@ -186,7 +171,10 @@ class _AddDeviceState extends State<AddDevice> {
                           onPressed: () {
                             selectImage("imageWait");
                           },
-                          child: const Text("Seleccionar Imagen"),
+                          child: const Text(
+                            "Seleccionar\nImagen",
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),
@@ -200,19 +188,20 @@ class _AddDeviceState extends State<AddDevice> {
                         padding: const EdgeInsets.symmetric(horizontal: 30),
                       ),
                       onPressed: () async {
-                        if (imageCon.image ==
-                            Image.asset("abierto.png").image) {
-                          ByteData bytes = await rootBundle.load("abierto.png");
+                        if (imageCon.image == const AssetImage("abierto.png")) {
+                          ByteData bytes =
+                              await rootBundle.load("assets/abierto.png");
                           imgConBytes = bytes.buffer.asUint8List();
                         }
                         if (imageDiscon.image ==
-                            Image.asset("cerrado.png").image) {
-                          ByteData bytes = await rootBundle.load("cerrado.png");
+                            const AssetImage("cerrado.png")) {
+                          ByteData bytes =
+                              await rootBundle.load("assets/cerrado.png");
                           imgDisconBytes = bytes.buffer.asUint8List();
                         }
-                        if (imageWait.image ==
-                            Image.asset("espera.png").image) {
-                          ByteData bytes = await rootBundle.load("espera.png");
+                        if (imageWait.image == const AssetImage("espera.png")) {
+                          ByteData bytes =
+                              await rootBundle.load("assets/espera.png");
                           imgWaitBytes = bytes.buffer.asUint8List();
                         }
                         Device device = Device(
@@ -223,6 +212,9 @@ class _AddDeviceState extends State<AddDevice> {
                             imgdiscon: imgDisconBytes,
                             imgwait: imgWaitBytes);
                         addDevice(device: device);
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, "/devices", (route) => false);
                       },
                       child: const Text('Añadir',
                           style: TextStyle(color: Colors.white, fontSize: 20)),

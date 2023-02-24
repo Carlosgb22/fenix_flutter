@@ -6,5 +6,3 @@ Future<Device> getDeviceById(String id) {
   var device = getDeviceByIdHttp(id);
   return Future.value(device);
 }
-
-actualizar(Device device) {}

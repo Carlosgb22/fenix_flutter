@@ -25,9 +25,30 @@ Future<Device> getDeviceByIdHttp(id) async {
   }
 }
 
-addDeviceHttp(json) async {
+addDeviceHttp(String json) async {
+  var response = await http.post(
+      Uri.parse("http://192.168.0.9:8080/devices/add"),
+      body: json,
+      headers: {"Content-type": "application/json"});
+  if (response.statusCode == 200) {
+    //Hacer que recargue lista de dispositivos
+  }
+}
+
+updateDeviceHttp(String json, String id) async {
+  var response = await http.post(
+      Uri.parse("http://192.168.0.9:8080/devices/$id/update"),
+      body: json,
+      headers: {"Content-type": "application/json"});
+  if (response.statusCode == 200) {
+    //Hacer que recargue lista de dispositivos
+  }
+}
+
+deleteDeviceHttp(id) async {
   var response =
-      await http.post(Uri.parse("http://192.168.0.9:8080/devices"), body: json);
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
+      await http.delete(Uri.parse("http://192.168.0.9:8080/devices/$id"));
+  if (response.statusCode == 200) {
+    return true;
+  }
 }

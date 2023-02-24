@@ -1,5 +1,6 @@
 ///Clase que contiene todos los widgets creados por mi (Actividad 10 Desarrollo de Interfaces RA3)
 import 'package:fenix_flutter/core/models/device_model.dart';
+import 'package:fenix_flutter/core/providers/delete_device_provider.dart';
 import 'package:fenix_flutter/core/providers/login_provider.dart';
 import 'package:fenix_flutter/ui/view/device_detail.dart';
 import 'package:flutter/material.dart';
@@ -112,21 +113,36 @@ class DeviceButton extends StatelessWidget {
           textStyle: const TextStyle(fontSize: 15)),
       child: Row(
         mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Icon(
             Icons.devices_other,
             color: Colors.blue,
             size: 60,
           ),
-          Padding(
-            padding:
-                EdgeInsets.only(left: MediaQuery.of(context).size.width / 7),
-            child: Text("Id: ${device.id}"),
-          ),
-          Padding(
-            padding:
-                EdgeInsets.only(left: MediaQuery.of(context).size.width / 7),
-            child: Text("Nombre: ${device.name}"),
+          Text("Id: ${device.id}"),
+          Text("Nombre: ${device.name}"),
+          IconButton(
+            icon: const Icon(
+              Icons.delete_forever_outlined,
+              color: Colors.red,
+            ),
+            onPressed: () {
+              var borrado = deleteDevice(id: device.id);
+              if (borrado) {
+                AlertDialog(
+                  content: Text("Dispositivo con id '${device.id}' eliminado"),
+                  actions: <Widget>[
+                    TextButton(
+                        child: const Text("Ok"),
+                        onPressed: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, "/devices", (route) => false);
+                        }),
+                  ],
+                );
+              }
+            },
           ),
         ],
       ),
