@@ -1,4 +1,4 @@
-import 'package:fenix_flutter/core/models/device_model.dart';
+/*import 'package:fenix_flutter/core/models/device_model.dart';
 import 'package:fenix_flutter/core/providers/device_details_provider.dart';
 import 'package:fenix_flutter/core/providers/update_device_provider.dart';
 import 'package:file_picker/file_picker.dart';
@@ -222,24 +222,6 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                                     const EdgeInsets.symmetric(horizontal: 30),
                               ),
                               onPressed: () async {
-                                if (imageCon.image ==
-                                    const AssetImage("abierto.png")) {
-                                  ByteData bytes = await rootBundle
-                                      .load("assets/abierto.png");
-                                  imgConBytes = bytes.buffer.asUint8List();
-                                }
-                                if (imageDiscon.image ==
-                                    const AssetImage("cerrado.png")) {
-                                  ByteData bytes = await rootBundle
-                                      .load("assets/cerrado.png");
-                                  imgDisconBytes = bytes.buffer.asUint8List();
-                                }
-                                if (imageWait.image ==
-                                    const AssetImage("espera.png")) {
-                                  ByteData bytes = await rootBundle
-                                      .load("assets/espera.png");
-                                  imgWaitBytes = bytes.buffer.asUint8List();
-                                }
                                 Device device = Device(
                                     id: controllerId.text,
                                     name: controllerName.text,
@@ -272,3 +254,4 @@ class _UpdateDeviceState extends State<UpdateDevice> {
             }));
   }
 }
+*/

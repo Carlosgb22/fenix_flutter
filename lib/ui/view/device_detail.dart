@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:convert';
 
 import 'package:fenix_flutter/core/providers/device_details_provider.dart';
 import 'package:fenix_flutter/ui/view/update_device.dart';
@@ -79,7 +79,7 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                                       style: TextStyle(fontSize: 28),
                                       textAlign: TextAlign.center),
                                   Image.memory(
-                                    Uint8List.fromList(dev.imgcon),
+                                    base64Decode(dev.imgcon),
                                     height:
                                         MediaQuery.of(context).size.height / 2,
                                     fit: BoxFit.cover,
@@ -102,7 +102,7 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                                       style: TextStyle(fontSize: 28),
                                       textAlign: TextAlign.center),
                                   Image.memory(
-                                    Uint8List.fromList(dev.imgdiscon),
+                                    base64Decode(dev.imgdiscon),
                                     height:
                                         MediaQuery.of(context).size.height / 2,
                                     fit: BoxFit.cover,
@@ -125,7 +125,7 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                                       style: TextStyle(fontSize: 28),
                                       textAlign: TextAlign.center),
                                   Image.memory(
-                                    Uint8List.fromList(dev.imgwait),
+                                    base64Decode(dev.imgwait),
                                     height:
                                         MediaQuery.of(context).size.height / 2,
                                     fit: BoxFit.cover,
@@ -142,11 +142,11 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                             padding: const EdgeInsets.symmetric(vertical: 30),
                           ),
                           onPressed: () {
-                            Navigator.push(
+                            /*Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        UpdateDevice(id: dev.id)));
+                                        UpdateDevice(id: dev.id)));*/
                           },
                           child: const Text(
                             "Actualizar dispositivo",

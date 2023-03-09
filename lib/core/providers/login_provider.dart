@@ -11,7 +11,8 @@ login(TextEditingController controllerEmail,
       //y contraseña introducidos en en los Widget CampoEmail y CampoContrasenia
       .signInWithEmailAndPassword(
           email: controllerEmail.text, password: controllerPassword.text)
-      .then((user) => Navigator.pushNamed(context, "/devices"))
+      .then((user) => Navigator.pushNamedAndRemoveUntil(
+          context, "/devices", (route) => false))
       //En caso de dar fallo se obtiene el error y mediante
       //su codigo de error se obtiene el mensaje de error
       .catchError((e) {

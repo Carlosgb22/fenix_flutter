@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:fenix_flutter/core/models/device_model.dart';
 import 'package:fenix_flutter/core/providers/add_device_provider.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class AddDevice extends StatefulWidget {
   const AddDevice({Key? key}) : super(key: key);
@@ -15,32 +20,74 @@ class _AddDeviceState extends State<AddDevice> {
   final controllerId = TextEditingController();
   final controllerName = TextEditingController();
   final controllerUserUid = TextEditingController();
-  Image imageCon = Image.asset("abierto.png");
-  Image imageDiscon = Image.asset("cerrado.png");
-  Image imageWait = Image.asset("espera.png");
-  late Uint8List imgConBytes;
-  late Uint8List imgDisconBytes;
-  late Uint8List imgWaitBytes;
+  Image img1 = Image.asset("assets/abierto.png");
+  Image img2 = Image.asset("assets/cerrado.png");
+  Image img3 = Image.asset("assets/espera.png");
+  late File imageCon;
+  late File imageDiscon;
+  late File imageWait;
+  late String imgConString;
+  late String imgDisconString;
+  late String imgWaitString;
 
-  Future<void> selectImage(String fieldName) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      // asegurarse de que la ruta de la imagen seleccionada sea válida
-      Uint8List? bytes = result.files.single.bytes;
-      if (bytes != null) {
-        setState(() {
+  Future selectImage(String fieldName) async {
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        if (!kIsWeb) {
           if (fieldName == "imageCon") {
-            imageCon = Image.memory(bytes);
-            imgConBytes = bytes;
+            imageCon = File(pickedImage.path);
+            imgConString = base64Encode(imageCon.readAsBytesSync());
+            img1 = Image.file(imageCon);
           } else if (fieldName == "imageDiscon") {
-            imageDiscon = Image.memory(bytes);
-            imgDisconBytes = bytes;
+            imageDiscon = File(pickedImage.path);
+            imgDisconString = base64Encode(imageDiscon.readAsBytesSync());
+            img2 = Image.file(imageDiscon);
           } else if (fieldName == "imageWait") {
-            imageWait = Image.memory(bytes);
-            imgWaitBytes = bytes;
+            imageWait = File(pickedImage.path);
+            imgWaitString = base64Encode(imageWait.readAsBytesSync());
+            img3 = Image.file(imageWait);
           }
-        });
-      }
+        } else {
+          if (fieldName == "imageCon") {
+            imgConString = pickedImage.path;
+            img1 = Image.network(imgConString);
+          } else if (fieldName == "imageDiscon") {
+            imgDisconString = pickedImage.path;
+            img2 = Image.network(imgDisconString);
+          } else if (fieldName == "imageWait") {
+            imgWaitString = pickedImage.path;
+            img3 = Image.network(imgWaitString);
+          }
+        }
+      });
+    }
+  }
+
+  Future<String> _getBytesFromUrl(str) async {
+    final response = await http.get(Uri.parse(str));
+    return base64Encode(response.bodyBytes);
+  }
+
+  Future<String> _getBytesFromAsset(str) async {
+    final ByteData data = await rootBundle.load(str);
+    return base64Encode(data.buffer.asUint8List());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    asyncImages();
+  }
+
+  void asyncImages() async {
+    if (!kIsWeb) {
+      imgConString = await _getBytesFromAsset("assets/abierto.png");
+      imgDisconString = await _getBytesFromAsset("assets/cerrado.png");
+      imgWaitString = await _getBytesFromAsset("assets/espera.png");
+    } else {
+      //TODO Hacer que funcione en web
     }
   }
 
@@ -119,7 +166,7 @@ class _AddDeviceState extends State<AddDevice> {
                         SizedBox(
                           width: (MediaQuery.of(context).size.width / 6),
                           height: (MediaQuery.of(context).size.width / 6),
-                          child: imageCon,
+                          child: img1,
                         ),
                         TextButton(
                           onPressed: () {
@@ -142,7 +189,7 @@ class _AddDeviceState extends State<AddDevice> {
                         SizedBox(
                           width: (MediaQuery.of(context).size.width / 6),
                           height: (MediaQuery.of(context).size.width / 6),
-                          child: imageDiscon,
+                          child: img2,
                         ),
                         TextButton(
                           onPressed: () {
@@ -165,7 +212,7 @@ class _AddDeviceState extends State<AddDevice> {
                         SizedBox(
                           width: (MediaQuery.of(context).size.width / 6),
                           height: (MediaQuery.of(context).size.width / 6),
-                          child: imageWait,
+                          child: img3,
                         ),
                         TextButton(
                           onPressed: () {
@@ -188,29 +235,35 @@ class _AddDeviceState extends State<AddDevice> {
                         padding: const EdgeInsets.symmetric(horizontal: 30),
                       ),
                       onPressed: () async {
-                        if (imageCon.image == const AssetImage("abierto.png")) {
-                          ByteData bytes =
-                              await rootBundle.load("assets/abierto.png");
-                          imgConBytes = bytes.buffer.asUint8List();
+                        Device device;
+                        if (!kIsWeb) {
+                          device = Device(
+                              id: controllerId.text,
+                              name: controllerName.text,
+                              userUid: controllerUserUid.text,
+                              imgcon: imgConString,
+                              imgdiscon: imgDisconString,
+                              imgwait: imgWaitString);
+                        } else {
+                          if (img1 != Image.asset("assets/abierto.png")) {
+                            imgConString = await _getBytesFromUrl(imgConString);
+                          }
+                          if (img2 != Image.asset("assets/cerrado.png")) {
+                            imgDisconString =
+                                await _getBytesFromUrl(imgDisconString);
+                          }
+                          if (img3 != Image.asset("assets/espera.png")) {
+                            imgWaitString =
+                                await _getBytesFromUrl(imgWaitString);
+                          }
+                          device = Device(
+                              id: controllerId.text,
+                              name: controllerName.text,
+                              userUid: controllerUserUid.text,
+                              imgcon: imgConString,
+                              imgdiscon: imgDisconString,
+                              imgwait: imgWaitString);
                         }
-                        if (imageDiscon.image ==
-                            const AssetImage("cerrado.png")) {
-                          ByteData bytes =
-                              await rootBundle.load("assets/cerrado.png");
-                          imgDisconBytes = bytes.buffer.asUint8List();
-                        }
-                        if (imageWait.image == const AssetImage("espera.png")) {
-                          ByteData bytes =
-                              await rootBundle.load("assets/espera.png");
-                          imgWaitBytes = bytes.buffer.asUint8List();
-                        }
-                        Device device = Device(
-                            id: controllerId.text,
-                            name: controllerName.text,
-                            userUid: controllerUserUid.text,
-                            imgcon: imgConBytes,
-                            imgdiscon: imgDisconBytes,
-                            imgwait: imgWaitBytes);
                         addDevice(device: device);
                         // ignore: use_build_context_synchronously
                         Navigator.pushNamedAndRemoveUntil(

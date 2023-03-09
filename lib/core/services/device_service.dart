@@ -26,13 +26,8 @@ Future<Device> getDeviceByIdHttp(id) async {
 }
 
 addDeviceHttp(String json) async {
-  var response = await http.post(
-      Uri.parse("http://192.168.0.9:8080/devices/add"),
-      body: json,
-      headers: {"Content-type": "application/json"});
-  if (response.statusCode == 200) {
-    //Hacer que recargue lista de dispositivos
-  }
+  await http.post(Uri.parse("http://192.168.0.9:8080/devices/add"),
+      body: json, headers: {"Content-type": "application/json"});
 }
 
 updateDeviceHttp(String json, String id) async {
@@ -41,7 +36,7 @@ updateDeviceHttp(String json, String id) async {
       body: json,
       headers: {"Content-type": "application/json"});
   if (response.statusCode == 200) {
-    //Hacer que recargue lista de dispositivos
+    //TODO Hacer que recargue lista de dispositivos
   }
 }
 

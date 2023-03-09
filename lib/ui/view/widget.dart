@@ -101,51 +101,60 @@ class _ButtonLoginState extends State<ButtonLogin> {
   }
 }
 
+///Widget el cual es un boton que muestra datos del dispositivo
 class DeviceButton extends StatelessWidget {
   final Device device;
+  //Se le pasa un dispositivo al boton con el cual se generará el boton
   const DeviceButton({super.key, required this.device});
 
   @override
   Widget build(BuildContext context) {
+    //Devuelve un boton
     return TextButton(
       style: TextButton.styleFrom(
           side: const BorderSide(width: 3.0),
           textStyle: const TextStyle(fontSize: 15)),
+      //Tiene una fila que se expande al ancho disponible de la pantalla
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //Lista de items que tiene la fila
         children: [
+          //Icono proporcionado por flutter
           const Icon(
             Icons.devices_other,
             color: Colors.blue,
             size: 60,
           ),
+          //Texto que indica el id del dispositivo
           Text("Id: ${device.id}"),
+          //Texto que indica el nombre del dispositivo
           Text("Nombre: ${device.name}"),
+          //Boton con icono de una papelera proporcionado por flutter
           IconButton(
             icon: const Icon(
               Icons.delete_forever_outlined,
               color: Colors.red,
             ),
+            //Cuando pulsas la papelera se borra el dispositivo indicado y te muestra un dialogo
             onPressed: () {
-              var borrado = deleteDevice(id: device.id);
-              if (borrado) {
-                AlertDialog(
-                  content: Text("Dispositivo con id '${device.id}' eliminado"),
-                  actions: <Widget>[
-                    TextButton(
-                        child: const Text("Ok"),
-                        onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, "/devices", (route) => false);
-                        }),
-                  ],
-                );
-              }
+              deleteDevice(id: device.id);
+              AlertDialog(
+                content: Text("Dispositivo con id '${device.id}' eliminado"),
+                actions: <Widget>[
+                  TextButton(
+                      child: const Text("Ok"),
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, "/devices", (route) => false);
+                      }),
+                ],
+              );
             },
           ),
         ],
       ),
+      //Cuando pulsas el resto de la fila te muestra una pestaña con los detalles del dispositivo
       onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
