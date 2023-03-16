@@ -142,11 +142,11 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                             padding: const EdgeInsets.symmetric(vertical: 30),
                           ),
                           onPressed: () {
-                            /*Navigator.push(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        UpdateDevice(id: dev.id)));*/
+                                        UpdateDevice(id: dev.id)));
                           },
                           child: const Text(
                             "Actualizar dispositivo",

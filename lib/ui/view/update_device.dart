@@ -1,9 +1,14 @@
-/*import 'package:fenix_flutter/core/models/device_model.dart';
-import 'package:fenix_flutter/core/providers/device_details_provider.dart';
-import 'package:fenix_flutter/core/providers/update_device_provider.dart';
-import 'package:file_picker/file_picker.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:fenix_flutter/core/models/device_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+
+import '../../core/providers/device_details_provider.dart';
+import '../../core/providers/update_device_provider.dart';
 
 class UpdateDevice extends StatefulWidget {
   final String id;
@@ -18,15 +23,62 @@ class _UpdateDeviceState extends State<UpdateDevice> {
   final controllerId = TextEditingController();
   final controllerName = TextEditingController();
   final controllerUserUid = TextEditingController();
-  Image imageCon = Image.asset("abierto.png");
-  Image imageDiscon = Image.asset("cerrado.png");
-  Image imageWait = Image.asset("espera.png");
-  late Uint8List imgConBytes;
-  late Uint8List imgDisconBytes;
-  late Uint8List imgWaitBytes;
+  late Image img1;
+  late Image img2;
+  late Image img3;
+  late File imageCon;
+  late File imageDiscon;
+  late File imageWait;
+  late String imgConString;
+  late String imgDisconString;
+  late String imgWaitString;
 
   late Future<Device> device;
   late String _id;
+
+  Future selectImage(String fieldName) async {
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      if (!kIsWeb) {
+        if (fieldName == "imageCon") {
+          imageCon = File(pickedImage.path);
+          imgConString = base64Encode(imageCon.readAsBytesSync());
+        } else if (fieldName == "imageDiscon") {
+          imageDiscon = File(pickedImage.path);
+          imgDisconString = base64Encode(imageDiscon.readAsBytesSync());
+        } else if (fieldName == "imageWait") {
+          imageWait = File(pickedImage.path);
+          imgWaitString = base64Encode(imageWait.readAsBytesSync());
+        }
+      } else {
+        if (fieldName == "imageCon") {
+          imgConString = pickedImage.path;
+          imgConString = await _getBytesFromUrl(imgConString);
+        } else if (fieldName == "imageDiscon") {
+          imgDisconString = pickedImage.path;
+          imgDisconString = await _getBytesFromUrl(imgDisconString);
+        } else if (fieldName == "imageWait") {
+          imgWaitString = pickedImage.path;
+          imgWaitString = await _getBytesFromUrl(imgWaitString);
+        }
+      }
+      setState(() {
+        device = Future.value(Device(
+            id: controllerId.text,
+            name: controllerName.text,
+            userUid: controllerUserUid.text,
+            imgcon: imgConString,
+            imgdiscon: imgDisconString,
+            imgwait: imgWaitString));
+      });
+    }
+  }
+
+  Future<String> _getBytesFromUrl(str) async {
+    final response = await http.get(Uri.parse(str));
+    return base64Encode(response.bodyBytes);
+  }
 
   @override
   void initState() {
@@ -35,33 +87,11 @@ class _UpdateDeviceState extends State<UpdateDevice> {
     device = getDeviceById(_id);
   }
 
-  Future<void> selectImage(String fieldName) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      // asegurarse de que la ruta de la imagen seleccionada sea válida
-      Uint8List? bytes = result.files.single.bytes;
-      if (bytes != null) {
-        setState(() {
-          if (fieldName == "imageCon") {
-            imageCon = Image.memory(bytes);
-            imgConBytes = bytes;
-          } else if (fieldName == "imageDiscon") {
-            imageDiscon = Image.memory(bytes);
-            imgDisconBytes = bytes;
-          } else if (fieldName == "imageWait") {
-            imageWait = Image.memory(bytes);
-            imgWaitBytes = bytes;
-          }
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("ActualizarDispositivo"),
+          title: const Text("Actualizar Dispositivo"),
         ),
         body: FutureBuilder<Device>(
             future: device,
@@ -77,6 +107,12 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                 controllerId.text = dev.id;
                 controllerName.text = dev.name;
                 controllerUserUid.text = dev.userUid;
+                imgConString = dev.imgcon;
+                imgDisconString = dev.imgdiscon;
+                imgWaitString = dev.imgwait;
+                img1 = Image.memory(base64Decode(dev.imgcon));
+                img2 = Image.memory(base64Decode(dev.imgdiscon));
+                img3 = Image.memory(base64Decode(dev.imgwait));
                 return Center(
                   child: Card(
                     child: Container(
@@ -148,7 +184,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                                       (MediaQuery.of(context).size.width / 6),
                                   height:
                                       (MediaQuery.of(context).size.width / 6),
-                                  child: imageCon,
+                                  child: img1,
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -173,7 +209,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                                       (MediaQuery.of(context).size.width / 6),
                                   height:
                                       (MediaQuery.of(context).size.width / 6),
-                                  child: imageDiscon,
+                                  child: img2,
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -198,7 +234,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                                       (MediaQuery.of(context).size.width / 6),
                                   height:
                                       (MediaQuery.of(context).size.width / 6),
-                                  child: imageWait,
+                                  child: img3,
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -222,13 +258,39 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                                     const EdgeInsets.symmetric(horizontal: 30),
                               ),
                               onPressed: () async {
-                                Device device = Device(
-                                    id: controllerId.text,
-                                    name: controllerName.text,
-                                    userUid: controllerUserUid.text,
-                                    imgcon: imgConBytes,
-                                    imgdiscon: imgDisconBytes,
-                                    imgwait: imgWaitBytes);
+                                Device device;
+                                if (!kIsWeb) {
+                                  device = Device(
+                                      id: controllerId.text,
+                                      name: controllerName.text,
+                                      userUid: controllerUserUid.text,
+                                      imgcon: imgConString,
+                                      imgdiscon: imgDisconString,
+                                      imgwait: imgWaitString);
+                                } else {
+                                  if (img1 !=
+                                      Image.asset("assets/abierto.png")) {
+                                    imgConString =
+                                        await _getBytesFromUrl(imgConString);
+                                  }
+                                  if (img2 !=
+                                      Image.asset("assets/cerrado.png")) {
+                                    imgDisconString =
+                                        await _getBytesFromUrl(imgDisconString);
+                                  }
+                                  if (img3 !=
+                                      Image.asset("assets/espera.png")) {
+                                    imgWaitString =
+                                        await _getBytesFromUrl(imgWaitString);
+                                  }
+                                  device = Device(
+                                      id: controllerId.text,
+                                      name: controllerName.text,
+                                      userUid: controllerUserUid.text,
+                                      imgcon: imgConString,
+                                      imgdiscon: imgDisconString,
+                                      imgwait: imgWaitString);
+                                }
                                 updateDevice(device: device);
                                 // ignore: use_build_context_synchronously
                                 Navigator.pushNamedAndRemoveUntil(
@@ -254,4 +316,3 @@ class _UpdateDeviceState extends State<UpdateDevice> {
             }));
   }
 }
-*/

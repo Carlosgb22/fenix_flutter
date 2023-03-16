@@ -31,13 +31,8 @@ addDeviceHttp(String json) async {
 }
 
 updateDeviceHttp(String json, String id) async {
-  var response = await http.post(
-      Uri.parse("http://192.168.0.9:8080/devices/$id/update"),
-      body: json,
-      headers: {"Content-type": "application/json"});
-  if (response.statusCode == 200) {
-    //TODO Hacer que recargue lista de dispositivos
-  }
+  await http.post(Uri.parse("http://192.168.0.9:8080/devices/$id/update"),
+      body: json, headers: {"Content-type": "application/json"});
 }
 
 deleteDeviceHttp(id) async {

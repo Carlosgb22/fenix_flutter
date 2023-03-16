@@ -136,20 +136,11 @@ class DeviceButton extends StatelessWidget {
               Icons.delete_forever_outlined,
               color: Colors.red,
             ),
-            //Cuando pulsas la papelera se borra el dispositivo indicado y te muestra un dialogo
+            //Cuando pulsas la papelera se borra el dispositivo indicado
             onPressed: () {
               deleteDevice(id: device.id);
-              AlertDialog(
-                content: Text("Dispositivo con id '${device.id}' eliminado"),
-                actions: <Widget>[
-                  TextButton(
-                      child: const Text("Ok"),
-                      onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, "/devices", (route) => false);
-                      }),
-                ],
-              );
+              Navigator.pushNamedAndRemoveUntil(
+                  context, "/devices", (route) => false);
             },
           ),
         ],
