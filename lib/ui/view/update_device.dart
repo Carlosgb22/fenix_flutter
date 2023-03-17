@@ -268,18 +268,20 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                                       imgdiscon: imgDisconString,
                                       imgwait: imgWaitString);
                                 } else {
-                                  if (img1 !=
-                                      Image.asset("assets/abierto.png")) {
+                                  if (img1.image !=
+                                      Image.asset("assets/images/abierto.png")
+                                          .image) {
                                     imgConString =
                                         await _getBytesFromUrl(imgConString);
                                   }
                                   if (img2 !=
-                                      Image.asset("assets/cerrado.png")) {
+                                      Image.asset(
+                                          "assets/images/cerrado.png")) {
                                     imgDisconString =
                                         await _getBytesFromUrl(imgDisconString);
                                   }
                                   if (img3 !=
-                                      Image.asset("assets/espera.png")) {
+                                      Image.asset("assets/images/espera.png")) {
                                     imgWaitString =
                                         await _getBytesFromUrl(imgWaitString);
                                   }

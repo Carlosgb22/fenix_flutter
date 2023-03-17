@@ -21,7 +21,7 @@ class _LoginState extends State<Login> {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Image(
-          image: AssetImage('assets/logo.png'),
+          image: AssetImage('assets/images/logo.png'),
           width: 400,
         ),
         Container(

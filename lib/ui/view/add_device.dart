@@ -20,9 +20,9 @@ class _AddDeviceState extends State<AddDevice> {
   final controllerId = TextEditingController();
   final controllerName = TextEditingController();
   final controllerUserUid = TextEditingController();
-  Image img1 = Image.asset("assets/abierto.png");
-  Image img2 = Image.asset("assets/cerrado.png");
-  Image img3 = Image.asset("assets/espera.png");
+  Image img1 = Image.asset("assets/images/abierto.png");
+  Image img2 = Image.asset("assets/images/cerrado.png");
+  Image img3 = Image.asset("assets/images/espera.png");
   late File imageCon;
   late File imageDiscon;
   late File imageWait;
@@ -83,11 +83,13 @@ class _AddDeviceState extends State<AddDevice> {
 
   void asyncImages() async {
     if (!kIsWeb) {
-      imgConString = await _getBytesFromAsset("assets/abierto.png");
-      imgDisconString = await _getBytesFromAsset("assets/cerrado.png");
-      imgWaitString = await _getBytesFromAsset("assets/espera.png");
+      imgConString = await _getBytesFromAsset("assets/images/abierto.png");
+      imgDisconString = await _getBytesFromAsset("assets/images/cerrado.png");
+      imgWaitString = await _getBytesFromAsset("assets/images/espera.png");
     } else {
-      //TODO Hacer que funcione en web
+      imgConString = await _getBytesFromAsset("assets/images/abierto.png");
+      imgDisconString = await _getBytesFromAsset("assets/images/cerrado.png");
+      imgWaitString = await _getBytesFromAsset("assets/images/espera.png");
     }
   }
 
@@ -245,14 +247,17 @@ class _AddDeviceState extends State<AddDevice> {
                               imgdiscon: imgDisconString,
                               imgwait: imgWaitString);
                         } else {
-                          if (img1 != Image.asset("assets/abierto.png")) {
+                          if (img1.image !=
+                              Image.asset("assets/images/abierto.png").image) {
                             imgConString = await _getBytesFromUrl(imgConString);
                           }
-                          if (img2 != Image.asset("assets/cerrado.png")) {
+                          if (img2.image !=
+                              Image.asset("assets/images/cerrado.png").image) {
                             imgDisconString =
                                 await _getBytesFromUrl(imgDisconString);
                           }
-                          if (img3 != Image.asset("assets/espera.png")) {
+                          if (img3.image !=
+                              Image.asset("assets/images/espera.png").image) {
                             imgWaitString =
                                 await _getBytesFromUrl(imgWaitString);
                           }

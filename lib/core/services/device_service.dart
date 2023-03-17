@@ -36,9 +36,5 @@ updateDeviceHttp(String json, String id) async {
 }
 
 deleteDeviceHttp(id) async {
-  var response =
-      await http.delete(Uri.parse("http://192.168.0.9:8080/devices/$id"));
-  if (response.statusCode == 200) {
-    return true;
-  }
+  await http.delete(Uri.parse("http://192.168.0.9:8080/devices/$id"));
 }
