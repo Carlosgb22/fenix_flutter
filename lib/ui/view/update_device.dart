@@ -259,40 +259,13 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                               ),
                               onPressed: () async {
                                 Device device;
-                                if (!kIsWeb) {
-                                  device = Device(
-                                      id: controllerId.text,
-                                      name: controllerName.text,
-                                      userUid: controllerUserUid.text,
-                                      imgcon: imgConString,
-                                      imgdiscon: imgDisconString,
-                                      imgwait: imgWaitString);
-                                } else {
-                                  if (img1.image !=
-                                      Image.asset("assets/images/abierto.png")
-                                          .image) {
-                                    imgConString =
-                                        await _getBytesFromUrl(imgConString);
-                                  }
-                                  if (img2 !=
-                                      Image.asset(
-                                          "assets/images/cerrado.png")) {
-                                    imgDisconString =
-                                        await _getBytesFromUrl(imgDisconString);
-                                  }
-                                  if (img3 !=
-                                      Image.asset("assets/images/espera.png")) {
-                                    imgWaitString =
-                                        await _getBytesFromUrl(imgWaitString);
-                                  }
-                                  device = Device(
-                                      id: controllerId.text,
-                                      name: controllerName.text,
-                                      userUid: controllerUserUid.text,
-                                      imgcon: imgConString,
-                                      imgdiscon: imgDisconString,
-                                      imgwait: imgWaitString);
-                                }
+                                device = Device(
+                                    id: controllerId.text,
+                                    name: controllerName.text,
+                                    userUid: controllerUserUid.text,
+                                    imgcon: imgConString,
+                                    imgdiscon: imgDisconString,
+                                    imgwait: imgWaitString);
                                 updateDevice(device: device);
                                 // ignore: use_build_context_synchronously
                                 Navigator.pushNamedAndRemoveUntil(
