@@ -5,7 +5,7 @@ Proyecto que se conecta a una API para poder manejar dispositivos
 ## Para empezar
 
 Antes de ejecutar la aplicacion tienes que cambiar las rutas de la clase device_service.dart
-Ejemplo:
+<br>Ejemplo:
 "http://192.168.0.9:8080/devices" => "http://tu.ip:8080/devices"
 
 ## Funcionamiento
