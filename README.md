@@ -14,6 +14,6 @@ La aplicación se puede ejecutar tanto en movil como en web,
 una vez autentificado con las credenciales usuario = prueba@prueba.com contraseña = usuario
 accederas a la lista de dispositivos, en ella tendras un componente personalizado por cada 
 dispositivo existente y un botón flotante que te permitirá añadir más dispositivos.
-<br><br>El componente será un botón el cual te mostrará los detalles del dispositivo al pulsarlo y 
+<br>El componente será un botón el cual te mostrará los detalles del dispositivo al pulsarlo y 
 una opción para actualizar los datos, el componente tendrá a la derecha el icono de una papelera 
 que permitirá eliminar ese dispositivo
