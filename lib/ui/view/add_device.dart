@@ -9,6 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
+///Clase que te muestra un formulario para añadir un dispositivo
+///Por defecto tendra imagenes por defecto que se almacenan en la
+///carpeta de assets y el usuario podra cambiar por otras de su dispositivo
 class AddDevice extends StatefulWidget {
   const AddDevice({Key? key}) : super(key: key);
 
@@ -30,10 +33,14 @@ class _AddDeviceState extends State<AddDevice> {
   late String imgDisconString;
   late String imgWaitString;
 
+  ///Este metodo obtiene una imagen usando la libreria image_picker y segun
+  ///el dispositivo en el que funcione la aplicacion lo almacena de una manera
+  ///o otra, recibe como parametro el nombre del campo que debe guardarla
   Future selectImage(String fieldName) async {
     final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedImage != null) {
+      //Indica a la aplicacion que debe cambiar el estado
       setState(() {
         if (!kIsWeb) {
           if (fieldName == "imageCon") {
@@ -65,11 +72,13 @@ class _AddDeviceState extends State<AddDevice> {
     }
   }
 
+  ///Obtiene los bytes de la imagen a partir de una url (se usa en web)
   Future<String> _getBytesFromUrl(str) async {
     final response = await http.get(Uri.parse(str));
     return base64Encode(response.bodyBytes);
   }
 
+  ///Obtiene los bytes de la imagen a partir de un asset
   Future<String> _getBytesFromAsset(str) async {
     final ByteData data = await rootBundle.load(str);
     return base64Encode(data.buffer.asUint8List());
@@ -81,16 +90,11 @@ class _AddDeviceState extends State<AddDevice> {
     asyncImages();
   }
 
+  ///Obtiene los bytes en forma de string
   void asyncImages() async {
-    if (!kIsWeb) {
-      imgConString = await _getBytesFromAsset("assets/images/abierto.png");
-      imgDisconString = await _getBytesFromAsset("assets/images/cerrado.png");
-      imgWaitString = await _getBytesFromAsset("assets/images/espera.png");
-    } else {
-      imgConString = await _getBytesFromAsset("assets/images/abierto.png");
-      imgDisconString = await _getBytesFromAsset("assets/images/cerrado.png");
-      imgWaitString = await _getBytesFromAsset("assets/images/espera.png");
-    }
+    imgConString = await _getBytesFromAsset("assets/images/abierto.png");
+    imgDisconString = await _getBytesFromAsset("assets/images/cerrado.png");
+    imgWaitString = await _getBytesFromAsset("assets/images/espera.png");
   }
 
   @override
@@ -104,8 +108,11 @@ class _AddDeviceState extends State<AddDevice> {
             child: Container(
               decoration:
                   BoxDecoration(border: Border.all(color: Colors.black)),
+              //Columna con un icono, Text y TextField para los campos,
+              //una fila que contiene las imagenes y un boton para añadir
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 const Icon(Icons.devices_other, size: 100),
+                //ID
                 const Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
@@ -122,6 +129,7 @@ class _AddDeviceState extends State<AddDevice> {
                     ),
                   ),
                 ),
+                //NOMBRE
                 const Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
@@ -138,6 +146,7 @@ class _AddDeviceState extends State<AddDevice> {
                     ),
                   ),
                 ),
+                //USER_UID
                 const Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
@@ -154,10 +163,13 @@ class _AddDeviceState extends State<AddDevice> {
                     ),
                   ),
                 ),
+                //Row que contiene 3 columnas (1 por imagen)
+                //Cada columna contiene un texto, una imagen y un boton para cambiar la imagen
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    //Columna Imagen Conexion
                     Column(
                       children: [
                         const Text(
@@ -181,6 +193,7 @@ class _AddDeviceState extends State<AddDevice> {
                         ),
                       ],
                     ),
+                    //Columna Imagen Desconexion
                     Column(
                       children: [
                         const Text(
@@ -204,6 +217,7 @@ class _AddDeviceState extends State<AddDevice> {
                         ),
                       ],
                     ),
+                    //Columna Imagen Espera
                     Column(
                       children: [
                         const Text(
@@ -229,6 +243,7 @@ class _AddDeviceState extends State<AddDevice> {
                     ),
                   ],
                 ),
+                //Boton para añadir el dispositivo
                 Padding(
                     padding: const EdgeInsets.all(10),
                     child: TextButton(
@@ -238,6 +253,7 @@ class _AddDeviceState extends State<AddDevice> {
                       ),
                       onPressed: () async {
                         Device device;
+                        //Si no se ejecuta en web se crea el dispositivo
                         if (!kIsWeb) {
                           device = Device(
                               id: controllerId.text,
@@ -246,6 +262,8 @@ class _AddDeviceState extends State<AddDevice> {
                               imgcon: imgConString,
                               imgdiscon: imgDisconString,
                               imgwait: imgWaitString);
+                          //En caso de que sea web se obtienen los string con
+                          //los bytes de las imagenes que no hayan sido cambiadas
                         } else {
                           if (img1.image !=
                               Image.asset("assets/images/abierto.png").image) {
@@ -269,7 +287,9 @@ class _AddDeviceState extends State<AddDevice> {
                               imgdiscon: imgDisconString,
                               imgwait: imgWaitString);
                         }
+                        //Se añade el dispositivo
                         addDevice(device: device);
+                        //Se vuelve a la pantalla de dispositivos
                         // ignore: use_build_context_synchronously
                         Navigator.pushNamedAndRemoveUntil(
                             context, "/devices", (route) => false);

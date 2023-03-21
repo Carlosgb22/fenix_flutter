@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import '../../core/providers/device_details_provider.dart';
 import '../../core/providers/update_device_provider.dart';
 
+///Esta clase sirve para cambiar y actualizar los datos de un dispositivo
 class UpdateDevice extends StatefulWidget {
   final String id;
 
@@ -36,6 +37,9 @@ class _UpdateDeviceState extends State<UpdateDevice> {
   late Future<Device> device;
   late String _id;
 
+  ///Este metodo obtiene una imagen usando la libreria image_picker y segun
+  ///el dispositivo en el que funcione la aplicacion lo almacena de una manera
+  ///o otra, recibe como parametro el nombre del campo que debe guardarla
   Future selectImage(String fieldName) async {
     final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -63,6 +67,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
           imgWaitString = await _getBytesFromUrl(imgWaitString);
         }
       }
+      //Indica a la aplicacion que debe cambiar el estado
       setState(() {
         device = Future.value(Device(
             id: controllerId.text,
@@ -75,6 +80,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
     }
   }
 
+  ///Obtiene los bytes de la imagen a partir de una url (se usa en web)
   Future<String> _getBytesFromUrl(str) async {
     final response = await http.get(Uri.parse(str));
     return base64Encode(response.bodyBytes);
@@ -83,6 +89,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
   @override
   void initState() {
     super.initState();
+    //Se obtiene el dispositivo por su id
     _id = widget.id;
     device = getDeviceById(_id);
   }
@@ -96,7 +103,9 @@ class _UpdateDeviceState extends State<UpdateDevice> {
         body: FutureBuilder<Device>(
             future: device,
             builder: (context, snapshot) {
+              //Si contiene datos se muestran
               if (snapshot.hasData) {
+                //Se crea un dispositivo
                 Device dev = Device(
                     id: snapshot.data!.id,
                     name: snapshot.data!.name,
@@ -104,12 +113,15 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                     imgcon: snapshot.data!.imgcon,
                     imgdiscon: snapshot.data!.imgdiscon,
                     imgwait: snapshot.data!.imgwait);
+                //Se añaden los datos a sus campos
                 controllerId.text = dev.id;
                 controllerName.text = dev.name;
                 controllerUserUid.text = dev.userUid;
+                //Se les asigna los caracters codificados a sus string
                 imgConString = dev.imgcon;
                 imgDisconString = dev.imgdiscon;
                 imgWaitString = dev.imgwait;
+                //Se obtienen las imagenes a traves de sus string
                 img1 = Image.memory(base64Decode(dev.imgcon));
                 img2 = Image.memory(base64Decode(dev.imgdiscon));
                 img3 = Image.memory(base64Decode(dev.imgwait));
@@ -118,8 +130,11 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black)),
+                      //Columna con un icono, Text y TextField para los campos,
+                      //una fila que contiene las imagenes y un boton para editar
                       child: Column(mainAxisSize: MainAxisSize.min, children: [
                         const Icon(Icons.devices_other, size: 100),
+                        //ID
                         const Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
@@ -136,6 +151,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                             ),
                           ),
                         ),
+                        //NOMBRE
                         const Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
@@ -152,6 +168,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                             ),
                           ),
                         ),
+                        //USER_UID
                         const Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
@@ -168,10 +185,13 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                             ),
                           ),
                         ),
+                        //Row que contiene 3 columnas (1 por imagen)
+                        //Cada columna contiene un texto, una imagen y un boton para cambiar la imagen
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            //Columna Imagen Conexion
                             Column(
                               children: [
                                 const Text(
@@ -197,6 +217,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                                 ),
                               ],
                             ),
+                            //Columna Imagen Desconexion
                             Column(
                               children: [
                                 const Text(
@@ -222,6 +243,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                                 ),
                               ],
                             ),
+                            //Columna Imagen Espera
                             Column(
                               children: [
                                 const Text(
@@ -249,6 +271,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                             ),
                           ],
                         ),
+                        //Boton para editar el dispositivo
                         Padding(
                             padding: const EdgeInsets.all(10),
                             child: TextButton(
@@ -259,6 +282,7 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                               ),
                               onPressed: () async {
                                 Device device;
+                                //Se obtiene el dispositivo con los datos cambiados
                                 device = Device(
                                     id: controllerId.text,
                                     name: controllerName.text,
@@ -266,7 +290,9 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                                     imgcon: imgConString,
                                     imgdiscon: imgDisconString,
                                     imgwait: imgWaitString);
+                                //Se llama al metodo para actualizar el dispositivo
                                 updateDevice(device: device);
+                                //Se vuelve a las pantallas de dispositivos
                                 // ignore: use_build_context_synchronously
                                 Navigator.pushNamedAndRemoveUntil(
                                     context, "/devices", (route) => false);
@@ -279,10 +305,12 @@ class _UpdateDeviceState extends State<UpdateDevice> {
                     ),
                   ),
                 );
+                //Si se obtiene error se muestra
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text('An error occurred: ${snapshot.error}'),
                 );
+                //Si esta cargando se muestra un icono de carga
               } else {
                 return const Center(
                   child: CircularProgressIndicator(),

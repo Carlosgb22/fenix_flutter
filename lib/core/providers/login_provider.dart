@@ -1,8 +1,8 @@
-// ignore_for_file: body_might_complete_normally_catch_error
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+///Este metodo comprueba de que el login se realice correctamente
+///y en caso contrario te devuelve un mensaje de error
 login(TextEditingController controllerEmail,
     TextEditingController controllerPassword, BuildContext context) {
   //Crea una instancia de FirebaseAuth
@@ -15,6 +15,7 @@ login(TextEditingController controllerEmail,
           context, "/devices", (route) => false))
       //En caso de dar fallo se obtiene el error y mediante
       //su codigo de error se obtiene el mensaje de error
+      // ignore: body_might_complete_normally_catch_error
       .catchError((e) {
     String errorMessage;
     switch (e.code) {
@@ -35,7 +36,7 @@ login(TextEditingController controllerEmail,
       default:
         errorMessage = "Un error ha ocurrido.";
     }
-    //Se muestra en un AlertDialog el mensaje de ErFenix()ror obtenido anteriormente
+    //Se muestra en un AlertDialog el mensaje de Error obtenido anteriormente
     showDialog(
         context: context,
         builder: (context) {

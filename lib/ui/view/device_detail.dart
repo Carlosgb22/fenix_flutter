@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/models/device_model.dart';
 
+///Esta clase muestra los detalles de un dispositivo
 class DeviceDetails extends StatefulWidget {
   final String id;
 
@@ -23,6 +24,7 @@ class _DeviceDetailsState extends State<DeviceDetails> {
   void initState() {
     super.initState();
     _id = widget.id;
+    //Se obtiene el dispositivo para cargar el widget
     device = getDeviceById(_id);
   }
 
@@ -35,6 +37,7 @@ class _DeviceDetailsState extends State<DeviceDetails> {
         body: FutureBuilder<Device>(
             future: device,
             builder: (context, snapshot) {
+              //Si se han obtenido datos se crea un dispositivo y se muestra
               if (snapshot.hasData) {
                 Device dev = Device(
                     id: snapshot.data!.id,
@@ -43,9 +46,11 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                     imgcon: snapshot.data!.imgcon,
                     imgdiscon: snapshot.data!.imgdiscon,
                     imgwait: snapshot.data!.imgwait);
+                //Se muestran los datos en una columna, las imagenes en una fila y un boton que te permite cambiar los datos
                 return Center(
                   child: Column(
                     children: [
+                      //DATOS
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -60,6 +65,7 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                               textAlign: TextAlign.left)
                         ],
                       ),
+                      //IMAGENES
                       Expanded(
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
@@ -136,6 +142,7 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                           ],
                         ),
                       ),
+                      //BOTON
                       TextButton(
                           style: TextButton.styleFrom(
                             backgroundColor: Colors.blue.shade300,
@@ -155,10 +162,12 @@ class _DeviceDetailsState extends State<DeviceDetails> {
                     ],
                   ),
                 );
+                //En caso de error te lo muestra en el medio de la pantalla
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text('An error occurred: ${snapshot.error}'),
                 );
+                //En el caso de que este cargando te muestra un indicador de carga
               } else {
                 return const Center(
                   child: CircularProgressIndicator(),
